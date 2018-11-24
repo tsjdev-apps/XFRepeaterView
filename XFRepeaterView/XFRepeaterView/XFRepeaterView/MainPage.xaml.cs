@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Xamarin.Forms;
+﻿using Xamarin.Forms;
+using XFRepeaterView.ViewModels;
 
 namespace XFRepeaterView
 {
@@ -12,6 +8,13 @@ namespace XFRepeaterView
         public MainPage()
         {
             InitializeComponent();
+        }
+
+        protected override void OnAppearing()
+        {
+            base.OnAppearing();
+
+            ((MainViewModel)BindingContext).LoadPersonsCommand.Execute(null);
         }
     }
 }

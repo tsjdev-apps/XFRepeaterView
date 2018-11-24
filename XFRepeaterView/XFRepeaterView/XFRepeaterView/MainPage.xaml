@@ -2,13 +2,35 @@
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:local="clr-namespace:XFRepeaterView"
-             x:Class="XFRepeaterView.MainPage">
+             xmlns:viewmodels="clr-namespace:XFRepeaterView.ViewModels"
+             xmlns:controls="clr-namespace:XFRepeaterView.Controls"
+             x:Class="XFRepeaterView.MainPage"
+             Padding="16">
 
-    <StackLayout>
-        <!-- Place new controls here -->
-        <Label Text="Welcome to Xamarin.Forms!" 
-           HorizontalOptions="Center"
-           VerticalOptions="CenterAndExpand" />
-    </StackLayout>
+    <ContentPage.BindingContext>
+        <viewmodels:MainViewModel/>
+    </ContentPage.BindingContext>
+
+    <ContentPage.Content>
+        <ScrollView>
+            <controls:RepeaterView ItemsSource="{Binding Persons}">
+                <DataTemplate>
+                    <StackLayout Margin="0,6">
+                        <Label>
+                            <Label.FormattedText>
+                                <FormattedString>
+                                    <Span Text="Name: "/>
+                                    <Span Text="{Binding Name}" FontAttributes="Bold" />
+                                    <Span Text="&#13;&#10;"/>
+                                    <Span Text="Age: "/>
+                                    <Span Text="{Binding Age}" FontAttributes="Italic" />
+                                </FormattedString>
+                            </Label.FormattedText>
+                        </Label>
+                    </StackLayout>
+                </DataTemplate>
+            </controls:RepeaterView>
+        </ScrollView>
+    </ContentPage.Content>
 
 </ContentPage>
