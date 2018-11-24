@@ -13,7 +13,8 @@
 
     <ContentPage.Content>
         <ScrollView>
-            <controls:RepeaterView ItemsSource="{Binding Persons}">
+            <controls:RepeaterView ItemsSource="{Binding Persons}"
+                                   ItemTappedCommand="{Binding ShowPersonDetailsCommand}">
                 <DataTemplate>
                     <StackLayout Margin="0,6">
                         <Label>
