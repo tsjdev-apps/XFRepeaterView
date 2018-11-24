@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Acr.UserDialogs;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
@@ -21,6 +22,9 @@ namespace XFRepeaterView.ViewModels
         private ICommand _loadPersonsCommand;
         public ICommand LoadPersonsCommand => _loadPersonsCommand ?? (_loadPersonsCommand = new Command(LoadPersons));
 
+        private ICommand _showPersonDetailsCommand;
+        public ICommand ShowPersonDetailsCommand => _showPersonDetailsCommand ?? (_showPersonDetailsCommand = new Command<Person>(ShowPersonDetails));
+
         private void LoadPersons()
         {
             var persons = new List<Person>();
@@ -33,6 +37,12 @@ namespace XFRepeaterView.ViewModels
 
             Persons = persons;
         }
+
+        private async void ShowPersonDetails(Person person)
+        {
+            await UserDialogs.Instance.AlertAsync($"You've clicked the person '{person.Name}' with the age of {person.Age}.");
+        }
+
 
         public event PropertyChangedEventHandler PropertyChanged;
 
