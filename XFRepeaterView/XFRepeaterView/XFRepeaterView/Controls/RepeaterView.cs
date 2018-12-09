@@ -37,6 +37,23 @@ namespace XFRepeaterView.Controls
             set => SetValue(ItemTappedCommandProperty, value);
         }
 
+        public static readonly BindableProperty IsAlternateRowColorEnabledProperty =
+           BindableProperty.Create(nameof(IsAlternateRowColorEnabled), typeof(bool), typeof(RepeaterView), false);
+
+        public bool IsAlternateRowColorEnabled
+        {
+            get => (bool)GetValue(IsAlternateRowColorEnabledProperty);
+            set => SetValue(IsAlternateRowColorEnabledProperty, value);
+        }
+
+        public static readonly BindableProperty AlternateRowColorProperty =
+            BindableProperty.Create(nameof(AlternateRowColor), typeof(Color), typeof(RepeaterView), Color.Black);
+
+        public Color AlternateRowColor
+        {
+            get => (Color)GetValue(AlternateRowColorProperty);
+            set => SetValue(AlternateRowColorProperty, value);
+        }
 
         public RepeaterView()
         {
@@ -44,7 +61,7 @@ namespace XFRepeaterView.Controls
         }
 
 
-        protected virtual View ViewFor(object item)
+        protected virtual View ViewFor(object item, bool isEvenRow = false)
         {
             if (ItemTemplate == null)
                 return null;
@@ -57,6 +74,12 @@ namespace XFRepeaterView.Controls
 
             if (ItemTappedCommand != null)
                 AddTapGestureToChildView(view);
+
+            if (IsAlternateRowColorEnabled)
+            {
+                if (isEvenRow)
+                    view.BackgroundColor = AlternateRowColor;
+            }
 
             return view;
         }
@@ -75,8 +98,12 @@ namespace XFRepeaterView.Controls
             if (collection is INotifyCollectionChanged observableCollection)
                 control.AddCollectionNotificationsListener(observableCollection);
 
+            var isEvenRow = false;
             foreach (var item in collection)
-                control.Children.Add(control.ViewFor(item));
+            {
+                control.Children.Add(control.ViewFor(item, isEvenRow));
+                isEvenRow = !isEvenRow;
+            }
         }
 
         private void AddCollectionNotificationsListener(INotifyCollectionChanged observableCollection)
@@ -90,25 +117,39 @@ namespace XFRepeaterView.Controls
 
         private void ObsersavableCollectionOnCollectionChanged(object s, NotifyCollectionChangedEventArgs e)
         {
-            switch (e.Action)
+            if (IsAlternateRowColorEnabled)
             {
-                case NotifyCollectionChangedAction.Add:
-                    foreach (var newItem in e.NewItems)
-                        Children.Add(ViewFor(newItem));
-                    break;
-                case NotifyCollectionChangedAction.Remove:
-                    foreach (var oldItem in e.OldItems)
-                    {
-                        var viewToRemove = Children.FirstOrDefault(x => x.BindingContext == oldItem);
-                        if (viewToRemove != null)
-                            Children.Remove(viewToRemove);
-                    }
-                    break;
-                default:
-                    Children.Clear();
-                    foreach (var item in (ICollection)s)
-                        Children.Add(ViewFor(item));
-                    break;
+                Children.Clear();
+
+                var isEvenRow = false;
+                foreach (var item in (ICollection)s)
+                {
+                    Children.Add(ViewFor(item, isEvenRow));
+                    isEvenRow = !isEvenRow;
+                }
+            }
+            else
+            {
+                switch (e.Action)
+                {
+                    case NotifyCollectionChangedAction.Add:
+                        foreach (var newItem in e.NewItems)
+                            Children.Add(ViewFor(newItem));
+                        break;
+                    case NotifyCollectionChangedAction.Remove:
+                        foreach (var oldItem in e.OldItems)
+                        {
+                            var viewToRemove = Children.FirstOrDefault(x => x.BindingContext == oldItem);
+                            if (viewToRemove != null)
+                                Children.Remove(viewToRemove);
+                        }
+                        break;
+                    default:
+                        Children.Clear();
+                        foreach (var item in (ICollection)s)
+                            Children.Add(ViewFor(item));
+                        break;
+                }
             }
         }
                
