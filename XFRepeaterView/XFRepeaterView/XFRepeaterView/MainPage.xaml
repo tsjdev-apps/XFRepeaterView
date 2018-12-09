@@ -4,31 +4,44 @@
              xmlns:local="clr-namespace:XFRepeaterView"
              xmlns:viewmodels="clr-namespace:XFRepeaterView.ViewModels"
              xmlns:controls="clr-namespace:XFRepeaterView.Controls"
-             x:Class="XFRepeaterView.MainPage"
-             Padding="16">
+             x:Class="XFRepeaterView.MainPage">
 
     <ContentPage.BindingContext>
-        <viewmodels:MainViewModel/>
+        <viewmodels:MainViewModel />
     </ContentPage.BindingContext>
 
     <ContentPage.Content>
         <ScrollView>
             <controls:RepeaterView ItemsSource="{Binding Persons}"
-                                   ItemTappedCommand="{Binding ShowPersonDetailsCommand}">
+                                   ItemTappedCommand="{Binding ShowPersonDetailsCommand}"
+                                   IsAlternateRowColorEnabled="True"
+                                   AlternateRowColor="LightGray">
                 <DataTemplate>
-                    <StackLayout Margin="0,6">
-                        <Label>
-                            <Label.FormattedText>
-                                <FormattedString>
-                                    <Span Text="Name: "/>
-                                    <Span Text="{Binding Name}" FontAttributes="Bold" />
-                                    <Span Text="&#13;&#10;"/>
-                                    <Span Text="Age: "/>
-                                    <Span Text="{Binding Age}" FontAttributes="Italic" />
-                                </FormattedString>
-                            </Label.FormattedText>
-                        </Label>
-                    </StackLayout>
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+                        <StackLayout Margin="16,6"
+                                     Grid.Row="0">
+                            <Label>
+                                <Label.FormattedText>
+                                    <FormattedString>
+                                        <Span Text="Name: " />
+                                        <Span Text="{Binding Name}"
+                                              FontAttributes="Bold" />
+                                        <Span Text="&#13;&#10;" />
+                                        <Span Text="Age: " />
+                                        <Span Text="{Binding Age}"
+                                              FontAttributes="Italic" />
+                                    </FormattedString>
+                                </Label.FormattedText>
+                            </Label>
+                        </StackLayout>
+                        <BoxView HeightRequest="1"
+                                 Color="Black"
+                                 Grid.Row="1" />
+                    </Grid>
                 </DataTemplate>
             </controls:RepeaterView>
         </ScrollView>
