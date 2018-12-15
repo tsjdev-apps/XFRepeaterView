@@ -4,45 +4,101 @@
              xmlns:local="clr-namespace:XFRepeaterView"
              xmlns:viewmodels="clr-namespace:XFRepeaterView.ViewModels"
              xmlns:controls="clr-namespace:XFRepeaterView.Controls"
+             xmlns:utils="clr-namespace:XFRepeaterView.Utils"
              x:Class="XFRepeaterView.MainPage">
 
     <ContentPage.BindingContext>
         <viewmodels:MainViewModel />
     </ContentPage.BindingContext>
 
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <DataTemplate x:Key="FemaleDataTemplate">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+                    <StackLayout Orientation="Horizontal"
+                                 Margin="16,6"
+                                 Spacing="12"
+                                 Grid.Row="0">
+
+                        <BoxView Color="Pink"
+                                 WidthRequest="25"
+                                 HeightRequest="25"
+                                 VerticalOptions="Center"
+                                 HorizontalOptions="Center" />
+
+                        <Label>
+                            <Label.FormattedText>
+                                <FormattedString>
+                                    <Span Text="Name: " />
+                                    <Span Text="{Binding Name}"
+                                          FontAttributes="Bold" />
+                                    <Span Text="&#13;&#10;" />
+                                    <Span Text="Age: " />
+                                    <Span Text="{Binding Age}"
+                                          FontAttributes="Italic" />
+                                </FormattedString>
+                            </Label.FormattedText>
+                        </Label>
+                    </StackLayout>
+                    <BoxView HeightRequest="1"
+                             Color="Black"
+                             Grid.Row="1" />
+                </Grid>
+            </DataTemplate>
+            <DataTemplate x:Key="MaleDataTemplate">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+                    <StackLayout Orientation="Horizontal"                                 
+                                 Margin="16,6"
+                                 Spacing="12"
+                                 Grid.Row="0">
+
+                        <BoxView Color="LightBlue"
+                                 WidthRequest="25"
+                                 HeightRequest="25"
+                                 VerticalOptions="Center"
+                                 HorizontalOptions="Center" />
+
+                        <Label>
+                            <Label.FormattedText>
+                                <FormattedString>
+                                    <Span Text="Name: " />
+                                    <Span Text="{Binding Name}"
+                                          FontAttributes="Bold" />
+                                    <Span Text="&#13;&#10;" />
+                                    <Span Text="Age: " />
+                                    <Span Text="{Binding Age}"
+                                          FontAttributes="Italic" />
+                                </FormattedString>
+                            </Label.FormattedText>
+                        </Label>
+                    </StackLayout>
+
+                    <BoxView HeightRequest="1"
+                             Color="Black"
+                             Grid.Row="1" />
+                </Grid>
+            </DataTemplate>
+            <utils:PersonDataTemplateSelector x:Key="PersonDataTemplateSelector"
+                                              FemaleDataTemplate="{StaticResource FemaleDataTemplate}"
+                                              MaleDataTemplate="{StaticResource MaleDataTemplate}"/>
+        </ResourceDictionary>
+    </ContentPage.Resources>
+
     <ContentPage.Content>
         <ScrollView>
             <controls:RepeaterView ItemsSource="{Binding Persons}"
                                    ItemTappedCommand="{Binding ShowPersonDetailsCommand}"
                                    IsAlternateRowColorEnabled="True"
-                                   AlternateRowColor="LightGray">
-                <DataTemplate>
-                    <Grid>
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="Auto" />
-                            <RowDefinition Height="Auto" />
-                        </Grid.RowDefinitions>
-                        <StackLayout Margin="16,6"
-                                     Grid.Row="0">
-                            <Label>
-                                <Label.FormattedText>
-                                    <FormattedString>
-                                        <Span Text="Name: " />
-                                        <Span Text="{Binding Name}"
-                                              FontAttributes="Bold" />
-                                        <Span Text="&#13;&#10;" />
-                                        <Span Text="Age: " />
-                                        <Span Text="{Binding Age}"
-                                              FontAttributes="Italic" />
-                                    </FormattedString>
-                                </Label.FormattedText>
-                            </Label>
-                        </StackLayout>
-                        <BoxView HeightRequest="1"
-                                 Color="Black"
-                                 Grid.Row="1" />
-                    </Grid>
-                </DataTemplate>
+                                   AlternateRowColor="LightGray"
+                                   ItemTemplateSelector="{StaticResource PersonDataTemplateSelector}">
             </controls:RepeaterView>
         </ScrollView>
     </ContentPage.Content>
