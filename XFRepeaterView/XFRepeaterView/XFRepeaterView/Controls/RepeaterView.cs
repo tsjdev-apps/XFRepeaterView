@@ -55,6 +55,15 @@ namespace XFRepeaterView.Controls
             set => SetValue(AlternateRowColorProperty, value);
         }
 
+        public static readonly BindableProperty ItemTemplateSelectorProperty =
+            BindableProperty.Create(nameof(ItemTemplateSelector), typeof(DataTemplateSelector), typeof(RepeaterView));
+
+        public DataTemplateSelector ItemTemplateSelector
+        {
+            get => (DataTemplateSelector)GetValue(ItemTemplateSelectorProperty);
+            set => SetValue(ItemTemplateSelectorProperty, value);
+        }
+
         public RepeaterView()
         {
             Spacing = 0;
@@ -63,10 +72,25 @@ namespace XFRepeaterView.Controls
 
         protected virtual View ViewFor(object item, bool isEvenRow = false)
         {
-            if (ItemTemplate == null)
+            if (ItemTemplateSelector == null && ItemTemplate == null)
                 return null;
 
-            var content = ItemTemplate.CreateContent();
+            object content = null;
+            if (ItemTemplateSelector != null)
+            {
+                var template = ItemTemplateSelector.SelectTemplate(item, this);
+                if (template != null)
+                {
+                    content = template.CreateContent();
+                }
+            }
+            else
+            {
+                content = ItemTemplate.CreateContent();
+            }
+
+            if (content == null)
+                return null;
 
             var view = content is ViewCell viewCell ? viewCell.View : content as View;
 
@@ -152,7 +176,7 @@ namespace XFRepeaterView.Controls
                 }
             }
         }
-               
+
         private void AddTapGestureToChildView(View view)
         {
             if (view == null)
