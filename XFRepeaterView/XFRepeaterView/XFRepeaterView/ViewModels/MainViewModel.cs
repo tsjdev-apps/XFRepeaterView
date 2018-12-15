@@ -32,7 +32,8 @@ namespace XFRepeaterView.ViewModels
 
             for (int i = 0; i < 100; i++)
             {
-                persons.Add(new Person { Name = $"Person {i + 1}", Age = ageRandom.Next(1, 100) });
+                var age = ageRandom.Next(1, 100);
+                persons.Add(new Person { Name = $"Person {i + 1}", Age = age, Gender = age % 2 == 0 ? Gender.Female : Gender.Male });
             }
 
             Persons = persons;
